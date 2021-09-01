@@ -26,7 +26,7 @@ body {
   overflow-x: scroll;
   white-space: nowrap;
   display: flex;
-  gap: .1rem;
+  gap: .4rem;
 }
 
 .display-operations {

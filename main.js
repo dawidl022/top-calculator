@@ -1,4 +1,5 @@
-const displayOutput = document.querySelector(".display-text")
+const displayOutput = document.querySelector(".display-text");
+const displayOperator = document.querySelector(".display-operator");
 let currentNumber = "";
 let newNumber = false;
 const operatingStack = [];
@@ -65,6 +66,36 @@ operatorBtns.forEach(btn => btn.addEventListener("click", e => {
   } else if (operator !== "=" || operatingStack.length >= 3) {
     operatingStack.push(operator);
   }
+  if (operator !== "%") {
+    displayOperator.textContent = e.target.textContent;
+    displayOperator.classList.remove("hidden");
+  }
   newNumber = true;
   evaluateStack();
-}))
+}));
+
+const clearEntry = document.getElementById("clear-entry")
+clearEntry.addEventListener("click", () => {
+  currentNumber = "";
+  
+  if (newNumber) {
+    displayOutput.textContent = 0;
+    operatingStack.splice(0, operatingStack.length);
+    displayOperator.classList.add("hidden");
+  } else {
+    newNumber = true;
+    if (operatingStack.length >= 1) {
+      displayOutput.textContent = operatingStack[0];
+    } else {
+      displayOutput.textContent = 0;
+    }
+  }
+})
+
+const clearAll = document.getElementById("clear-all")
+clearAll.addEventListener("click", () => {
+  currentNumber = "";
+  displayOutput.textContent = 0;
+  displayOperator.classList.add("hidden");
+  operatingStack.splice(0, operatingStack.length);
+})
