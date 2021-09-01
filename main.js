@@ -1,3 +1,6 @@
+// TODO refactor code, remove redundancy
+
+
 const wrapper = document.querySelector(".wrapper");
 const displayOutput = document.querySelector(".display-text");
 const displayOperator = document.querySelector(".display-operator");
@@ -48,8 +51,7 @@ function evaluateStack() {
   console.log(operatingStack);
 }
 
-const numberBtns = document.querySelectorAll(".btn.number")
-numberBtns.forEach(btn => btn.addEventListener("click", e => {
+function addDigit(e) {
   if (newNumber) {
     currentNumber = "";
   }
@@ -64,10 +66,12 @@ numberBtns.forEach(btn => btn.addEventListener("click", e => {
   currentNumber += e.target.textContent;
   newNumber = false;
   displayOutput.textContent = currentNumber;
-}));
+}
 
-const operatorBtns = document.querySelectorAll(".btn.operator")
-operatorBtns.forEach(btn => btn.addEventListener("click", e => {
+const numberBtns = document.querySelectorAll(".btn.number")
+numberBtns.forEach(btn => btn.addEventListener("click", addDigit));
+
+function addOperator(e) {
   if (!newNumber) {
     operatingStack.push(Number(currentNumber));
   }
@@ -83,10 +87,12 @@ operatorBtns.forEach(btn => btn.addEventListener("click", e => {
   }
   newNumber = true;
   evaluateStack();
-}));
+}
 
-const clearEntry = document.getElementById("clear-entry")
-clearEntry.addEventListener("click", () => {
+const operatorBtns = document.querySelectorAll(".btn.operator")
+operatorBtns.forEach(btn => btn.addEventListener("click", addOperator));
+
+function clearEntryAction() {
   currentNumber = "";
   
   if (newNumber) {
@@ -101,7 +107,10 @@ clearEntry.addEventListener("click", () => {
       displayOutput.textContent = 0;
     }
   }
-})
+}
+
+const clearEntry = document.getElementById("clear-entry");
+clearEntry.addEventListener("click", clearEntryAction);
 
 const clearAll = document.getElementById("clear-all")
 clearAll.addEventListener("click", () => {
@@ -139,3 +148,50 @@ function snarkyMsg(msg) {
     });
   }, 8000);
 }
+
+document.addEventListener("keyup", e => {
+  const key = e.key;
+  if (key === "Backspace" && !newNumber) {
+    currentNumber = currentNumber.slice(0, -1);
+    if (currentNumber === "") {
+      displayOutput.textContent = 0;
+    } else {
+      displayOutput.textContent = currentNumber;
+    }
+  } else if (key === "Enter"){
+
+    const dummyE = {
+      target: {
+        textContent: "="
+      }
+    }
+
+    addOperator(dummyE)
+
+  } else if (key === "Escape") {
+
+    clearEntryAction();
+
+  } else if (Number(key) == key) {
+    
+    const dummyE = {
+      target: {
+        textContent: key
+      }
+    }
+
+    addDigit(dummyE);
+
+  } else if (Object.values(possibleOperators).includes(key)) {
+
+    keyIndex = Object.values(possibleOperators).indexOf(key)
+
+    const dummyE = {
+      target: {
+        textContent: Object.keys(possibleOperators)[keyIndex]
+      }
+    }
+
+    addOperator(dummyE)
+  }
+});
