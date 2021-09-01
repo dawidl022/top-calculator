@@ -58,6 +58,8 @@ numberBtns.forEach(btn => btn.addEventListener("click", e => {
   }
   if (currentNumber === "" && e.target.textContent === ".") {
     currentNumber = "0";
+  } else if (currentNumber.includes(".") && e.target.textContent === ".") {
+    return;
   }
   currentNumber += e.target.textContent;
   newNumber = false;
