@@ -75,6 +75,10 @@ body {
   background-color: #b8858a;
 }
 
+.operator {
+  background-color: #6385aa;
+}
+
 .number {
   font-weight: 700;
 }
