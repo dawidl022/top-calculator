@@ -15,7 +15,7 @@ body {
   display: grid;
   gap: 1em;
   font-family: monospace;
-  max-width: 96vmin;
+  max-width: 94vmin;
 }
 
 .display {
@@ -23,13 +23,25 @@ body {
   background-color: #b5c9be;
   border-radius: .6em;
   padding: .4em;
-  overflow: auto;
+  overflow-x: scroll;
   white-space: nowrap;
+  display: flex;
+  gap: .1rem;
+}
+
+.display-operations {
+  display: flex;
+  align-items: center;
 }
 
 .display-text {
+  flex: 1;
   font-size: 2em;
   text-align: right;
+}
+
+.hidden {
+  visibility: hidden;
 }
 
 .main-buttons {

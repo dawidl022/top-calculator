@@ -17,6 +17,10 @@ function divide(a, b) {
   return a / b;
 }
 
+function percent(x) {
+  return x / 100;
+}
+
 function operate(operator, a, b) {
   switch (operator) {
     case "+":
