@@ -41,7 +41,7 @@ body {
 }
 
 .hidden {
-  visibility: hidden;
+  opacity: 0;
 }
 
 .main-buttons {
@@ -77,4 +77,32 @@ body {
 
 .number {
   font-weight: 700;
+}
+
+.snarky-message {
+  background-color: #fff;
+  border-radius: 30px;
+  display: grid;
+  font-family: sans-serif;
+  gap: .4rem 2rem;
+  grid-template-columns: auto 1fr;
+  left: 50%;
+  padding: 1rem 3rem ;
+  position: fixed;
+  text-align: center;
+  top: 1rem;
+  transform: translateX(-50%);
+  transition: opacity .3s;
+}
+
+.snarky-message .title {
+  font-weight: bold;
+}
+
+.snarky-message::before {
+  content: "\f091";
+  font-family: "Font Awesome 5 Free";
+  font-size: 3rem;
+  font-weight: 900;
+  grid-row: span 2;
 }

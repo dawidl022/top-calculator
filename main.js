@@ -1,5 +1,7 @@
+const wrapper = document.querySelector(".wrapper");
 const displayOutput = document.querySelector(".display-text");
 const displayOperator = document.querySelector(".display-operator");
+const triggeredAchievements = [];
 let currentNumber = "";
 let newNumber = false;
 const operatingStack = [];
@@ -31,10 +33,17 @@ function evaluateStack() {
     operatingStack.push(result);
     displayOutput.textContent = result;
 
+    
     if (nextOperator !== "="){
       operatingStack.push(nextOperator);
     }
-
+    
+    if (operandB === 0 && operator == "/") {
+      snarkyMsg("Tried to divide by zero");
+      operatingStack.splice(0, operatingStack.length);
+      displayOperator.classList.add("hidden");
+    }
+  
   }
   console.log(operatingStack);
 }
@@ -99,3 +108,32 @@ clearAll.addEventListener("click", () => {
   displayOperator.classList.add("hidden");
   operatingStack.splice(0, operatingStack.length);
 })
+
+function snarkyMsg(msg) {
+  if (triggeredAchievements.includes(msg)) return;
+  triggeredAchievements.push(msg);
+
+  const container = document.createElement("div");
+  container.classList.add("snarky-message")
+
+  const achievement = document.createElement("span");
+  achievement.classList.add("title");
+  achievement.textContent = "Achievement unlocked";
+  const message = document.createElement("span");
+  message.textContent = msg;
+
+  container.append(achievement);
+  container.append(message);
+  container.classList.add("hidden");
+  wrapper.append(container)
+  setTimeout(() => {
+    container.classList.remove("hidden");
+  }, 300);
+  
+  setTimeout(() => {
+    container.classList.add("hidden");
+    container.addEventListener("animationend", () => {
+      container.remove();
+    });
+  }, 8000);
+}
