@@ -1,12 +1,12 @@
 // TODO refactor code, remove redundancy
 
-
+// GLOBAL VARIABLES
 const wrapper = document.querySelector(".wrapper");
 const displayOutput = document.querySelector(".display-text");
 const displayOperator = document.querySelector(".display-operator");
 const triggeredAchievements = [];
 let currentNumber = "";
-let newNumber = false;
+let newNumber = false;  // bool representing if a new number is ready to be input
 const operatingStack = [];
 const possibleOperators = {
   "+": "+",
@@ -15,14 +15,29 @@ const possibleOperators = {
   "÷": "/",
   "%": "%",
   "=": "="
-}
+};
+
+// Event listeners
+
+const numberBtns = document.querySelectorAll(".btn.number");
+numberBtns.forEach(btn => btn.addEventListener("click", addDigit));
+
+const operatorBtns = document.querySelectorAll(".btn.operator");
+operatorBtns.forEach(btn => btn.addEventListener("click", addOperator));
+
+const clearEntry = document.getElementById("clear-entry");
+clearEntry.addEventListener("click", clearEntryAction);
+
+const clearAll = document.getElementById("clear-all");
+clearAll.addEventListener("click", clearAllAction());
+
 
 function evaluateStack() {
   if (operatingStack.slice(-1) == "%") {
 
     operatingStack.pop();
     const operand = operatingStack.pop();
-    const result = percent(operand)
+    const result = percent(operand);
     operatingStack.push(result);
     displayOutput.textContent = result;
 
@@ -46,9 +61,8 @@ function evaluateStack() {
       operatingStack.splice(0, operatingStack.length);
       displayOperator.classList.add("hidden");
     }
-  
+
   }
-  console.log(operatingStack);
 }
 
 function addDigit(e) {
@@ -68,16 +82,13 @@ function addDigit(e) {
   displayOutput.textContent = currentNumber;
 }
 
-const numberBtns = document.querySelectorAll(".btn.number")
-numberBtns.forEach(btn => btn.addEventListener("click", addDigit));
-
 function addOperator(e) {
   if (!newNumber) {
     operatingStack.push(Number(currentNumber));
   }
-  const operator = possibleOperators[e.target.textContent]
+  const operator = possibleOperators[e.target.textContent];
   if (Object.values(possibleOperators).includes(operatingStack.slice(-1)[0])) {
-    operatingStack.splice(-1, 1, operator)
+    operatingStack.splice(-1, 1, operator);
   } else if (operator !== "=" || operatingStack.length >= 3) {
     operatingStack.push(operator);
   }
@@ -88,9 +99,6 @@ function addOperator(e) {
   newNumber = true;
   evaluateStack();
 }
-
-const operatorBtns = document.querySelectorAll(".btn.operator")
-operatorBtns.forEach(btn => btn.addEventListener("click", addOperator));
 
 function clearEntryAction() {
   currentNumber = "";
@@ -109,34 +117,35 @@ function clearEntryAction() {
   }
 }
 
-const clearEntry = document.getElementById("clear-entry");
-clearEntry.addEventListener("click", clearEntryAction);
-
-const clearAll = document.getElementById("clear-all")
-clearAll.addEventListener("click", () => {
+function clearAllAction() {
   currentNumber = "";
   displayOutput.textContent = 0;
   displayOperator.classList.add("hidden");
   operatingStack.splice(0, operatingStack.length);
-})
+}
 
 function snarkyMsg(msg) {
-  if (triggeredAchievements.includes(msg)) return;
+  if (triggeredAchievements.includes(msg)) {
+    return;
+  };
   triggeredAchievements.push(msg);
 
   const container = document.createElement("div");
-  container.classList.add("snarky-message")
+  container.classList.add("snarky-message");
 
   const achievement = document.createElement("span");
   achievement.classList.add("title");
   achievement.textContent = "Achievement unlocked";
+
   const message = document.createElement("span");
   message.textContent = msg;
 
   container.append(achievement);
   container.append(message);
   container.classList.add("hidden");
-  wrapper.append(container)
+
+  wrapper.append(container);
+
   setTimeout(() => {
     container.classList.remove("hidden");
   }, 300);
@@ -149,49 +158,41 @@ function snarkyMsg(msg) {
   }, 8000);
 }
 
+
+// Keyboard support
+
 document.addEventListener("keyup", e => {
+  
+  function DummyE(textContent) {
+    this.target = {
+      textContent
+    }
+  }
+
   const key = e.key;
+
   if (key === "Backspace" && !newNumber) {
+    
     currentNumber = currentNumber.slice(0, -1);
+
     if (currentNumber === "") {
       displayOutput.textContent = 0;
     } else {
       displayOutput.textContent = currentNumber;
     }
+
   } else if (key === "Enter"){
-
-    const dummyE = {
-      target: {
-        textContent: "="
-      }
-    }
-
-    addOperator(dummyE)
+    addOperator(new DummyE("="));
 
   } else if (key === "Escape") {
-
     clearEntryAction();
 
   } else if (Number(key) == key) {
-    
-    const dummyE = {
-      target: {
-        textContent: key
-      }
-    }
-
-    addDigit(dummyE);
+    addDigit(new DummyE(key));
 
   } else if (Object.values(possibleOperators).includes(key)) {
 
     keyIndex = Object.values(possibleOperators).indexOf(key)
-
-    const dummyE = {
-      target: {
-        textContent: Object.keys(possibleOperators)[keyIndex]
-      }
-    }
-
-    addOperator(dummyE)
+    addOperator(new DummyE(Object.keys(possibleOperators)[keyIndex]));
   }
 });
