@@ -1,6 +1,5 @@
-// TODO refactor code, remove redundancy
-
 // GLOBAL VARIABLES
+
 const wrapper = document.querySelector(".wrapper");
 const displayOutput = document.querySelector(".display-text");
 const displayOperator = document.querySelector(".display-operator");
